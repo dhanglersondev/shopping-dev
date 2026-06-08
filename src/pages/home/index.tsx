@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { BsCartPlus } from "react-icons/bs";
 import { api } from "../../services/api";
 import { CartContext } from "../../contexts/CartContext";
+import toast from "react-hot-toast";
 
 export interface ProductsProps {
    id: number;
@@ -25,6 +26,12 @@ export function Home() {
    }, [])
 
    function handleAddCartItem(product: ProductsProps) {
+      toast.success("Produto adicionado ao carrinho", {
+         style: {
+            background: "#e6fffa",
+            color: "#234e52",
+         },
+      });
       addItemCart(product);
    }
 
@@ -43,7 +50,6 @@ export function Home() {
                {products.map((product) => (
                   <section
                      key={product.id}
-                     // Em grid-cols-1 e grid-cols-2, max-w aumenta para ocupar mais espaço; ajusta responsivamente via Tailwind
                      className="
                         bg-white rounded-lg shadow hover:shadow-md transition-all duration-200 p-3 flex flex-col items-center 
                         max-w-80 w-full mx-auto md:mx-0 justify-between border border-gray-100 hover:-translate-y-0.5

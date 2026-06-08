@@ -3,7 +3,7 @@ import { CartContext } from "../../contexts/CartContext"
 import { Link } from "react-router-dom";
 
 export function Cart() {
-   const { cart } = useContext(CartContext);
+   const { cart, total, addItemCart, removeItemCart } = useContext(CartContext);
 
    return (
       <div className="bg-linear-to-br from-gray-100 to-gray-200 min-h-screen py-12">
@@ -43,7 +43,8 @@ export function Cart() {
 
                   <div className="flex items-center justify-center gap-3">
                      <button
-                        className="bg-slate-600 px-2 rounded text-white font-medium flex items-center justify-center"
+                        onClick={() => removeItemCart(item)}
+                        className="bg-slate-600 px-2 rounded text-white font-medium flex items-center justify-center cursor-pointer"
                      >
                         -
                      </button>
@@ -51,12 +52,12 @@ export function Cart() {
                      {item.amount}
 
                      <button
-                        className="bg-slate-600 px-2 rounded text-white font-medium flex items-center justify-center"
+                        onClick={() => addItemCart(item)}
+                        className="bg-slate-600 px-2 rounded text-white font-medium flex items-center justify-center cursor-pointer"
                      >
                         +
                      </button>
                   </div>
-
 
                   <strong className="float-right">
                      SubTotal: {item.total.toLocaleString("pt-BR", {
@@ -68,7 +69,7 @@ export function Cart() {
             ))}
 
             {cart.length > 0 && (
-               <p className="font-bold mt-4">Total: R$1.000</p>
+               <p className="font-bold mt-4">Total: {total}</p>
             )}
          </div>
       </div>
