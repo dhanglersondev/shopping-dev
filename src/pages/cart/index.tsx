@@ -1,42 +1,75 @@
+import { useContext } from "react"
+import { CartContext } from "../../contexts/CartContext"
+import { Link } from "react-router-dom";
 
 export function Cart() {
+   const { cart } = useContext(CartContext);
+
    return (
       <div className="bg-linear-to-br from-gray-100 to-gray-200 min-h-screen py-12">
          <div className="w-full max-w-7xl px-4 mx-auto">
             <h1 className="font-medium text-2xl text-center my-4">Meu carrinho</h1>
 
-            <section className="flex items-center justify-between border-b-2 border-gray-300 py-2 px-2">
-               <img
-                  src="https://m.media-amazon.com/images/I/61gVL56Z5cL._AC_SX679_.jpg"
-                  alt="Logo produto"
-                  className="w-32"
-               />
+            {cart.length === 0 && (
+               <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <h2 className="text-2xl font-semibold text-gray-700 mb-3">
+                     🛒 Seu carrinho está vazio
+                  </h2>
 
-               <strong>Preço: R$ 3.500,00</strong>
+                  <p className="text-gray-500 mb-6">
+                     Adicione alguns produtos para continuar suas compras.
+                  </p>
 
-               <div className="flex items-center justify-center gap-3">
-                  <button
-                     className="bg-slate-600 px-2 rounded text-white font-medium flex items-center justify-center"
+                  <Link
+                     to="/"
+                     className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg transition-colors duration-300"
                   >
-                     -
-                  </button>
-
-                  1
-
-                  <button
-                     className="bg-slate-600 px-2 rounded text-white font-medium flex items-center justify-center"
-                  >
-                     +
-                  </button>
+                     Ver produtos
+                  </Link>
                </div>
+            )}
+
+            {cart.map((item) => (
+               <section
+                  key={item.id}
+                  className="flex items-center justify-between border-b-2 border-gray-300 py-2 px-2">
+                  <img
+                     src={item.cover}
+                     alt={item.title}
+                     className="w-32"
+                  />
+
+                  <strong>Preço: {item.price}</strong>
+
+                  <div className="flex items-center justify-center gap-3">
+                     <button
+                        className="bg-slate-600 px-2 rounded text-white font-medium flex items-center justify-center"
+                     >
+                        -
+                     </button>
+
+                     {item.amount}
+
+                     <button
+                        className="bg-slate-600 px-2 rounded text-white font-medium flex items-center justify-center"
+                     >
+                        +
+                     </button>
+                  </div>
 
 
-               <strong className="float-right">
-                  SubTotal: R$ 3.500,00
-               </strong>
-            </section>
+                  <strong className="float-right">
+                     SubTotal: {item.total.toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL"
+                     })}
+                  </strong>
+               </section>
+            ))}
 
-            <p className="font-bold mt-4">Total: R$1.000</p>
+            {cart.length > 0 && (
+               <p className="font-bold mt-4">Total: R$1.000</p>
+            )}
          </div>
       </div>
    )
