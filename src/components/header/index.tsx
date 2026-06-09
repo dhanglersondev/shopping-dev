@@ -18,12 +18,12 @@ export function Header() {
 
         <div className="flex items-center space-x-2">
           <Link
-            to="cart"
+            to="/cart"
             className="relative p-2 rounded-full text-black hover:bg-white transition-colors"
           >
             <FiShoppingCart size={24} />
             {cartAmount > 0 && (
-              <span className="absolute right-0 -top-2 px-2 bg-green-600 rounded-full w-6 h-6 flex items-center justify center text-white text-xs">
+              <span className="absolute right-0 -top-2 px-2 bg-green-600 rounded-full w-6 h-6 flex items-center justify-center text-white text-xs">
                 {cartAmount}
               </span>
             )}

@@ -30,46 +30,57 @@ function CartProvider({ children }: CartProviderProps) {
    const [total, setTotal] = useState("");
 
    function addItemCart(newItem: ProductsProps) {
-      const indexItem = cart.findIndex(item => item.id === newItem.id)
+      setCart((prevCart) => {
+         const indexItem = prevCart.findIndex((item) => item.id === newItem.id);
 
-      if (indexItem !== -1) {
-         let cartList = cart;
+         if (indexItem !== -1) {
+            const updatedCart = prevCart.map((item, index) =>
+               index === indexItem
+                  ? {
+                     ...item,
+                     amount: item.amount + 1,
+                     total: (item.amount + 1) * item.price,
+                  }
+                  : item
+            );
+            totalResultCart(updatedCart);
+            return updatedCart;
+         }
 
-         cartList[indexItem].amount = cartList[indexItem].amount + 1;
-         cartList[indexItem].total = cartList[indexItem].amount * cartList[indexItem].price;
+         const data = {
+            ...newItem,
+            amount: 1,
+            total: newItem.price,
+         };
 
-         setCart(cartList)
-         totalResultCart(cartList);
-         return;
-      }
-
-      let data = {
-         ...newItem,
-         amount: 1,
-         total: newItem.price
-      }
-
-      setCart(products => [...products, data])
-      totalResultCart([...cart, data])
+         const updatedCart = [...prevCart, data];
+         totalResultCart(updatedCart);
+         return updatedCart;
+      });
    }
 
    function removeItemCart(product: CartProps) {
-      const indexItem = cart.findIndex(item => item.id === product.id)
+      setCart((prevCart) => {
+         const indexItem = prevCart.findIndex((item) => item.id === product.id);
 
-      if (cart[indexItem]?.amount > 1) {
-         let cartList = cart;
+         if (prevCart[indexItem]?.amount > 1) {
+            const updatedCart = prevCart.map((item, index) =>
+               index === indexItem
+                  ? {
+                     ...item,
+                     amount: item.amount - 1,
+                     total: item.total - item.price,
+                  }
+                  : item
+            );
+            totalResultCart(updatedCart);
+            return updatedCart;
+         }
 
-         cartList[indexItem].amount = cartList[indexItem].amount - 1;
-         cartList[indexItem].total = cartList[indexItem].total - cartList[indexItem].price;
-
-         setCart(cartList);
-         totalResultCart(cartList);
-         return;
-      }
-
-      const removeItem = cart.filter(item => item.id !== product.id)
-      setCart(removeItem);
-      totalResultCart(removeItem);
+         const updatedCart = prevCart.filter((item) => item.id !== product.id);
+         totalResultCart(updatedCart);
+         return updatedCart;
+      });
    }
 
    function totalResultCart(items: CartProps[]) {
@@ -84,7 +95,7 @@ function CartProvider({ children }: CartProviderProps) {
       <CartContext.Provider
          value={{
             cart,
-            cartAmount: cart.length,
+            cartAmount: cart.reduce((acc, item) => acc + item.amount, 0),
             addItemCart,
             removeItemCart,
             total
